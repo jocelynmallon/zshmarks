@@ -49,5 +49,5 @@ function go() {
 
 # Show a list of the bookmarks
 function showmarks() {
-	cat ~/.bookmarks | awk '{ printf "%-40s%-40s%s\n",$1,$2,$3}' FS=\|
+	cat ~/.bookmarks | awk '{ printf "%-20s%-40s%s\n",$2,$1,$3}' FS=\|
 }
