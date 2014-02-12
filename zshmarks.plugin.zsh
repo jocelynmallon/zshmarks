@@ -51,3 +51,22 @@ function go() {
 function showmarks() {
 	cat ~/.bookmarks | awk '{ printf "%-20s%-40s%s\n",$2,$1,$3}' FS=\|
 }
+
+# Delete a bookmark
+function deletemark()  {
+	bookmark_name=$1
+	if [[ -z $bookmark_name ]]; then
+		echo 'Invalid name, please provide a name for your bookmark to delete. For example:'
+		echo '  deletemark foo'
+		return 1
+	else
+		t=$(mktemp -t bookmarks.XXXXXX) || exit 1
+		trap "rm -f -- '$t'" EXIT
+
+		sed "/$bookmark_name/d" "$bookmarks_file" > "$t"
+		mv "$t" "$bookmarks_file"
+
+		rm -f -- "$t"
+		trap - EXIT
+	fi
+}
