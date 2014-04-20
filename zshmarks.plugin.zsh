@@ -30,12 +30,12 @@ function bookmark() {
 	fi
 }
 
-function go() {
+function jump() {
 	bookmark_name=$1
 	bookmark="$(grep "|$bookmark_name$" "$bookmarks_file")"
 	if [[ -z $bookmark ]]; then
 		echo "Invalid name, please provide a valid bookmark name. For example:"
-		echo "  go foo"
+		echo "  jump foo"
 		echo
 		echo "To bookmark a folder, go to the folder then do this (naming the bookmark 'foo'):"
 		echo "  bookmark foo"
