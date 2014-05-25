@@ -30,6 +30,22 @@ function bookmark() {
 	fi
 }
 
+source_setenv() {
+	bookmark_name=$1
+	# is there a setenv file to source
+	if [[ -f "setenv-source-me.sh" ]]; then
+
+		# if we have not already sourced it in the current zsh session ..
+		setenv_var=`echo "setenv_${bookmark_name}" | sed "s/[^a-zA-Z0-9]/_/g"`
+		if [[ -z ${(P)setenv_var} ]]; then
+			echo "sourceing 'setenv-source-me.sh'"
+			source setenv-source-me.sh
+			# remember that we have sourced it
+			eval "$setenv_var=sourced"
+		fi
+	fi
+}
+
 function jump() {
 	bookmark_name=$1
 	bookmark="$(grep "|$bookmark_name$" "$bookmarks_file")"
@@ -43,6 +59,7 @@ function jump() {
 	else
 		dir="${bookmark%%|*}"
 		cd "${dir}"
+		source_setenv $bookmark_name
 		unset dir
 	fi
 }
