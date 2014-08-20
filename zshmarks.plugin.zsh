@@ -19,7 +19,15 @@ function bookmark() {
 		echo '  bookmark foo'
 		return 1
 	else
-		bookmark="$(pwd)|$bookmark_name" # Store the bookmark as folder|name
+                
+                cur_dir="$(pwd)"
+
+                # Replace /home/uname with $HOME
+                if [[ "$cur_dir" =~ ^"$HOME"(/|$) ]]; then
+                        cur_dir="\$HOME${cur_dir#$HOME}"
+                fi
+
+		bookmark="$cur_dir|$bookmark_name" # Store the bookmark as folder|name
 		if [[ -z $(grep "$bookmark" $bookmarks_file) ]]; then
 			echo $bookmark >> $bookmarks_file
 			echo "Bookmark '$bookmark_name' saved"
@@ -58,7 +66,7 @@ function jump() {
 		return 1
 	else
 		dir="${bookmark%%|*}"
-		cd "${dir}"
+		eval "cd ${dir}"
 		source_setenv $bookmark_name
 		unset dir
 	fi
