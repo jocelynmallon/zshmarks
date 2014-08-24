@@ -19,16 +19,14 @@ function bookmark() {
 		echo '  bookmark foo'
 		return 1
 	else
-                
-                cur_dir="$(pwd)"
-
-                # Replace /home/uname with $HOME
-                if [[ "$cur_dir" =~ ^"$HOME"(/|$) ]]; then
-                        cur_dir="\$HOME${cur_dir#$HOME}"
-                fi
-
-		bookmark="$cur_dir|$bookmark_name" # Store the bookmark as folder|name
-		if [[ -z $(grep "$bookmark" $bookmarks_file) ]]; then
+    cur_dir="$(pwd)"
+    # Replace /home/uname with $HOME
+    if [[ "$cur_dir" =~ ^"$HOME"(/|$) ]]; then
+      cur_dir="\$HOME${cur_dir#$HOME}"
+    fi
+    # Store the bookmark as folder|name
+    bookmark="$cur_dir|$bookmark_name"
+    if [[ -z $(grep "$bookmark" $bookmarks_file) ]]; then
 			echo $bookmark >> $bookmarks_file
 			echo "Bookmark '$bookmark_name' saved"
 		else
@@ -42,7 +40,6 @@ source_setenv() {
 	bookmark_name=$1
 	# is there a setenv file to source
 	if [[ -f "setenv-source-me.sh" ]]; then
-
 		# if we have not already sourced it in the current zsh session ..
 		setenv_var=`echo "setenv_${bookmark_name}" | sed "s/[^a-zA-Z0-9]/_/g"`
 		if [[ -z ${(P)setenv_var} ]]; then
@@ -87,10 +84,8 @@ function deletemark()  {
 	else
 		t=$(mktemp -t bookmarks.XXXXXX) || exit 1
 		trap "rm -f -- '$t'" EXIT
-
 		sed "/$bookmark_name/d" "$bookmarks_file" > "$t"
 		mv "$t" "$bookmarks_file"
-
 		rm -f -- "$t"
 		trap - EXIT
 	fi
