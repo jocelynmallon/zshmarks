@@ -2,7 +2,7 @@
 #          FILE:  zshmarks.plugin.zsh
 #   DESCRIPTION:  oh-my-zsh plugin file.
 #        AUTHOR:  Jocelyn Mallon
-#       VERSION:  1.0
+#       VERSION:  1.5.0
 # ------------------------------------------------------------------------------
 
 bookmarks_file="$HOME/.bookmarks"
@@ -63,7 +63,7 @@ function jump() {
 		return 1
 	else
 		dir="${bookmark%%|*}"
-		eval "cd ${dir}"
+		eval "cd \"${dir}\""
 		source_setenv $bookmark_name
 		unset dir
 	fi
