@@ -5,6 +5,7 @@
 #       VERSION:  1.5.0
 # ------------------------------------------------------------------------------
 
+local bookmarks_file
 bookmarks_file="$HOME/.bookmarks"
 
 # Create bookmarks_file it if it doesn't exist
