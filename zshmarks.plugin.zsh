@@ -96,5 +96,3 @@ function deletemark()  {
 	fi
 }
 
-# Unset variables so they do not bleed into shells
-unset bookmarks_file
