@@ -5,16 +5,19 @@
 #       VERSION:  1.5.0
 # ------------------------------------------------------------------------------
 
-local bookmarks_file
-bookmarks_file="$HOME/.bookmarks"
+# Set BOOKMARKS_FILE if it doesn't exist to the default.
+# Allows for a user-configured BOOKMARKS_FILE.
+if [[ -z $BOOKMARKS_FILE ]] ; then
+	export BOOKMARKS_FILE="$HOME/.bookmarks"
+fi
 
 # Create bookmarks_file it if it doesn't exist
-if [[ ! -f $bookmarks_file ]]; then
-	touch $bookmarks_file
+if [[ ! -f $BOOKMARKS_FILE ]]; then
+	touch $BOOKMARKS_FILE
 fi
 
 function bookmark() {
-	bookmark_name=$1
+	local bookmark_name=$1
 	if [[ -z $bookmark_name ]]; then
 		echo 'Invalid name, please provide a name for your bookmark. For example:'
 		echo '  bookmark foo'
@@ -27,8 +30,8 @@ function bookmark() {
     fi
     # Store the bookmark as folder|name
     bookmark="$cur_dir|$bookmark_name"
-    if [[ -z $(grep "$bookmark" $bookmarks_file) ]]; then
-			echo $bookmark >> $bookmarks_file
+    if [[ -z $(grep "$bookmark" $BOOKMARKS_FILE) ]]; then
+			echo $bookmark >> $BOOKMARKS_FILE
 			echo "Bookmark '$bookmark_name' saved"
 		else
 			echo "Bookmark already existed"
@@ -38,7 +41,7 @@ function bookmark() {
 }
 
 source_setenv() {
-	bookmark_name=$1
+	local bookmark_name=$1
 	# is there a setenv file to source
 	if [[ -f "setenv-source-me.sh" ]]; then
 		# if we have not already sourced it in the current zsh session ..
@@ -53,8 +56,8 @@ source_setenv() {
 }
 
 function jump() {
-	bookmark_name=$1
-	bookmark="$(grep "|$bookmark_name$" "$bookmarks_file")"
+	local bookmark_name=$1
+	local bookmark="$(grep "|$bookmark_name$" "$BOOKMARKS_FILE")"
 	if [[ -z $bookmark ]]; then
 		echo "Invalid name, please provide a valid bookmark name. For example:"
 		echo "  jump foo"
@@ -77,17 +80,21 @@ function showmarks() {
 
 # Delete a bookmark
 function deletemark()  {
-	bookmark_name=$1
+	local bookmark_name=$1
 	if [[ -z $bookmark_name ]]; then
 		echo 'Invalid name, please provide a name for your bookmark to delete. For example:'
 		echo '  deletemark foo'
 		return 1
 	else
+		local t
 		t=$(mktemp -t bookmarks.XXXXXX) || exit 1
 		trap "rm -f -- '$t'" EXIT
-		sed "/$bookmark_name/d" "$bookmarks_file" > "$t"
-		mv "$t" "$bookmarks_file"
+		sed "/$bookmark_name/d" "$BOOKMARKS_FILE" > "$t"
+		mv "$t" "$BOOKMARKS_FILE"
 		rm -f -- "$t"
 		trap - EXIT
 	fi
 }
+
+# Unset variables so they do not bleed into shells
+unset bookmarks_file
