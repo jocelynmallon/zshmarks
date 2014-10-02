@@ -18,3 +18,29 @@ How to install
 * Source `~/.zshrc`  to take changes into account:
 
         source ~/.zshrc
+
+Commands/Usage:
+------
+
+* jump - used to 'jump' (cd) to the given bookmark directory. If the bookmark directory contains a 'setenv-source-me.sh' file, it will check to see if it's already been sourced, and source the file if necessary.
+
+        jump 'foo'
+
+* bookmark - used to create a new bookmark for your current working directory
+
+        cd 'some_dir'
+        bookmark 'foo'
+
+* deletemark - used to delete a bookmark
+
+        deletemark 'foo'
+
+* showmarks - prints a list of all saved bookmarks
+
+Notes/Tips:
+-----------
+
+You can change the location of the bookmarks file (default is $HOME/.bookmarks) by adding the environment variable 'BOOKMARKS_FILE' to your shell profile.
+
+        export BOOKMARKS_FILE="foo/bar"
+
