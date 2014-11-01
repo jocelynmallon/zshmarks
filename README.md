@@ -35,7 +35,10 @@ Commands/Usage:
 
         deletemark 'foo'
 
-* showmarks - prints a list of all saved bookmarks
+* showmarks - prints a list of all saved bookmarks, or print the directory information for a single, specific bookmark
+
+        showmarks 'foo'
+        $HOMR/foo
 
 Notes/Tips:
 -----------

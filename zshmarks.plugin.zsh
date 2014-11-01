@@ -75,7 +75,12 @@ function jump() {
 
 # Show a list of the bookmarks
 function showmarks() {
-	cat ~/.bookmarks | awk '{ printf "%-20s%-40s%s\n",$2,$1,$3}' FS=\|
+  if [[ $# -eq 1 ]]; then
+    local bookmark_name=$1
+    awk -F\| -v name="$bookmark_name" '$2 == name {print $1; exit}' "$BOOKMARKS_FILE"
+  else
+    cat "$BOOKMARKS_FILE" | awk '{ printf "%-20s%-40s%s\n",$2,$1,$3}' FS=\|
+  fi
 }
 
 # Delete a bookmark

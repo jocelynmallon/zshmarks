@@ -1,0 +1,4 @@
+#compdef showmarks
+#autoload
+
+_arguments "1: :(`grep "|" $BOOKMARKS_FILE | cut -d\| -f2`)"
