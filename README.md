@@ -38,7 +38,7 @@ Commands/Usage:
 * showmarks - prints a list of all saved bookmarks, or print the directory information for a single, specific bookmark
 
         showmarks 'foo'
-        $HOMR/foo
+        $HOME/foo
 
 Notes/Tips:
 -----------
