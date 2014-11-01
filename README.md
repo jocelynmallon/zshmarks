@@ -47,3 +47,12 @@ You can change the location of the bookmarks file (default is $HOME/.bookmarks) 
 
         export BOOKMARKS_FILE="foo/bar"
 
+If you were familiar with [Bashmarks (by huyng)](https://github.com/huyng/bashmarks), you can setup zshmarks to behave the same by adding the following aliases to your shell setup files/dotfiles:
+
+        alias g="jump"
+        alias s="bookmark"
+        alias d="deletemark"
+        alias p="showmarks"
+        alias l="showmarks
+
+(You can also omit the "l" alias, and just use p without an argument to show all  bookmarks.)
