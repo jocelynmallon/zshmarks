@@ -6,6 +6,8 @@ A port of [Bashmarks (by Todd Werth)](https://github.com/twerth/bashmarks), a si
 How to install
 --------------
 
+oh-my-zsh
+---------
 * Download the script or clone this repository in [oh-my-zsh](http://github.com/robbyrussell/oh-my-zsh) plugins directory:
 
         cd ~/.oh-my-zsh/custom/plugins
@@ -18,6 +20,10 @@ How to install
 * Source `~/.zshrc`  to take changes into account:
 
         source ~/.zshrc
+
+antigen
+-------
+Add `antigen bundle jocelynmallon/zshmarks` to your .zshrc where you're adding your other plugins. Antigen will clone the plugin for you and add it to your antigen setup the next time you start a new shell.
 
 Commands/Usage:
 ------
