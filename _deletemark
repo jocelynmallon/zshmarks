@@ -1,4 +1,4 @@
-#compdef jump
+#compdef deletemark
 #autoload
 
 bookmarks=(
