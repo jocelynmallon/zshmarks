@@ -1,4 +1,4 @@
-#compdef deletemark
+#compdef jump deletemark showmarks
 #autoload
 
 bookmarks=(
@@ -10,4 +10,11 @@ bookmarks=(
 	done
 	`
 )
-_describe -t commands 'Bookmarks' bookmarks
+
+_arguments \
+	'*:: :->subcmds' && return 0
+
+if (( CURRENT == 1 )); then
+	_describe -t commands 'Bookmarks' bookmarks
+	return
+fi
