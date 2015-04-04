@@ -1,0 +1,20 @@
+#compdef jump deletemark showmarks
+#autoload
+
+bookmarks=(
+	`
+	grep "|" $BOOKMARKS_FILE | while read line; do
+		bookmark_name=$(echo "$line" | awk -F "|" '{print $2}')
+		bookmark_path=$(echo "$line" | awk -F "|" '{print $1}')
+		eval "echo \"${bookmark_name}:${bookmark_path}\""
+	done
+	`
+)
+
+_arguments \
+	'*:: :->subcmds' && return 0
+
+if (( CURRENT == 1 )); then
+	_describe -t commands 'Bookmarks' bookmarks
+	return
+fi
