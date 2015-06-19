@@ -1,15 +1,17 @@
 #compdef jump deletemark showmarks
 #autoload
 
-bookmarks=(
-	`
-	grep "|" $BOOKMARKS_FILE | while read line; do
-		bookmark_name=$(echo "$line" | awk -F "|" '{print $2}')
-		bookmark_path=$(echo "$line" | awk -F "|" '{print $1}')
-		eval "echo \"${bookmark_name}:${bookmark_path}\""
-	done
-	`
-)
+local bookmark_file="$(<"$BOOKMARKS_FILE")"
+local bookmark_array; bookmark_array=(${(f)bookmark_file});
+local bookmark_name bookmark_path bookmark_line
+bookmarks=()
+for bookmark_line in $bookmark_array; do
+	if [[ "$bookmark_line" == *"|"* ]] ; then
+		bookmark_name="${bookmark_line%%|*}"
+		bookmark_path="${bookmark_line#*|}"
+		bookmarks+="${bookmark_path}:${bookmark_name}"
+	fi
+done
 
 _arguments \
 	'*:: :->subcmds' && return 0
