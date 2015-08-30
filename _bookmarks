@@ -10,7 +10,7 @@ for bookmark_line in $bookmark_array; do
 		bookmark_path="${bookmark_line%%|*}"
 		bookmark_path="${bookmark_path/\$HOME/\~}"
 		bookmark_name="${bookmark_line#*|}"
-		bookmarks+="${bookmark_path}:${bookmark_name}"
+		bookmarks+="${bookmark_name}:${bookmark_path}"
 	fi
 done
 
