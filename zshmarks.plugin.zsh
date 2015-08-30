@@ -2,13 +2,18 @@
 #          FILE:  zshmarks.plugin.zsh
 #   DESCRIPTION:  oh-my-zsh plugin file.
 #        AUTHOR:  Jocelyn Mallon
-#       VERSION:  1.5.0
+#       VERSION:  1.7.0
 # ------------------------------------------------------------------------------
 
 # Set BOOKMARKS_FILE if it doesn't exist to the default.
 # Allows for a user-configured BOOKMARKS_FILE.
 if [[ -z $BOOKMARKS_FILE ]] ; then
 	export BOOKMARKS_FILE="$HOME/.bookmarks"
+fi
+
+# Check if $BOOKMARKS_FILE is a symlink.
+if [[ -L $BOOKMARKS_FILE ]]; then
+  BOOKMARKS_FILE=$(readlink $BOOKMARKS_FILE)
 fi
 
 # Create bookmarks_file it if it doesn't exist
@@ -90,29 +95,46 @@ function jump() {
 
 # Show a list of the bookmarks
 function showmarks() {
+  local bookmark_file="$(<"$BOOKMARKS_FILE")"
+  local bookmark_array; bookmark_array=(${(f)bookmark_file});
+  local bookmark_name bookmark_path bookmark_line
   if [[ $# -eq 1 ]]; then
-    local bookmark_name=$1
-    awk -F\| -v name="$bookmark_name" '$2 == name {print $1; exit}' "$BOOKMARKS_FILE"
+    bookmark_name="*\|${1}"
+    bookmark_line=${bookmark_array[(r)$bookmark_name]}
+    bookmark_path="${bookmark_line%%|*}"
+    bookmark_path="${bookmark_path/\$HOME/~}"
+    printf "%s \n" $bookmark_path
   else
-    cat "$BOOKMARKS_FILE" | awk '{ printf "%-20s%-40s%s\n",$2,$1,$3}' FS=\|
+    for bookmark_line in $bookmark_array; do
+      bookmark_path="${bookmark_line%%|*}"
+      bookmark_path="${bookmark_path/\$HOME/~}"
+      bookmark_name="${bookmark_line#*|}"
+      printf "%s\t\t%s\n" "$bookmark_name" "$bookmark_path"
+    done
   fi
 }
 
 # Delete a bookmark
 function deletemark()  {
-	local bookmark_name=$1
-	if [[ -z $bookmark_name ]]; then
-		echo 'Invalid name, please provide a name for your bookmark to delete. For example:'
-		echo '  deletemark foo'
-		return 1
-	else
-		local t
-		t=$(mktemp -t bookmarks.XXXXXX) || exit 1
-		trap "rm -f -- '$t'" EXIT
-		sed "/$bookmark_name/d" "$BOOKMARKS_FILE" > "$t"
-		mv "$t" "$BOOKMARKS_FILE"
-		rm -f -- "$t"
-		trap - EXIT
+  local bookmark_name=$1
+  if [[ -z $bookmark_name ]]; then
+    printf "%s \n" "Please provide a name for your bookmark to delete. For example:"
+    printf "\t%s \n" "deletemark foo"
+    return 1
+  else
+    local bookmark_line bookmark_search
+    local bookmark_file="$(<"$BOOKMARKS_FILE")"
+    local bookmark_array; bookmark_array=(${(f)bookmark_file});
+    bookmark_search="*\|${bookmark_name}"
+    if [[ ! ${bookmark_array[(r)$bookmark_search]} ]]; then
+      eval "printf '%s\n' \"'${bookmark_name}' not found, skipping.\""
+    else
+      cp "${BOOKMARKS_FILE}" "${BOOKMARKS_FILE}.bak"
+      bookmark_line=${bookmark_array[(r)$bookmark_search]}
+      bookmark_array=(${bookmark_array[@]/$bookmark_line})
+      eval "printf '%s\n' \"\${bookmark_array[@]}\"" >! $BOOKMARKS_FILE
+      mv "${BOOKMARKS_FILE}.bak" ~/.Trash/"bookmarks"$(date +%H-%M-%S)
+    fi
 	fi
 }
 
