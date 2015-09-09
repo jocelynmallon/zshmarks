@@ -126,7 +126,7 @@ function deletemark()  {
     local bookmark_file="$(<"$BOOKMARKS_FILE")"
     local bookmark_array; bookmark_array=(${(f)bookmark_file});
     bookmark_search="*\|${bookmark_name}"
-    if [[ ! ${bookmark_array[(r)$bookmark_search]} ]]; then
+    if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
       eval "printf '%s\n' \"'${bookmark_name}' not found, skipping.\""
     else
       cp "${BOOKMARKS_FILE}" "${BOOKMARKS_FILE}.bak"
