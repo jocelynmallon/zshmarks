@@ -45,21 +45,6 @@ function bookmark() {
 	fi
 }
 
-source_setenv() {
-	local bookmark_name=$1
-	# is there a setenv file to source
-	if [[ -f "setenv-source-me.sh" ]]; then
-		# if we have not already sourced it in the current zsh session ..
-		setenv_var=`echo "setenv_${bookmark_name}" | sed "s/[^a-zA-Z0-9]/_/g"`
-		if [[ -z ${(P)setenv_var} ]]; then
-			echo "sourceing 'setenv-source-me.sh'"
-			source setenv-source-me.sh
-			# remember that we have sourced it
-			eval "$setenv_var=sourced"
-		fi
-	fi
-}
-
 __zshmarks_zgrep() {
 	local outvar="$1"; shift
 	local pattern="$1"
