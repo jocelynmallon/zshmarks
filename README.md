@@ -46,7 +46,7 @@ Then make sure you activate the plugin in your .zpreztorc file:
 Commands/Usage:
 ------
 
-* jump - used to 'jump' (cd) to the given bookmark directory. If the bookmark directory contains a 'setenv-source-me.sh' file, it will check to see if it's already been sourced, and source the file if necessary.
+* jump - used to 'jump' (cd) to the given bookmark directory. ~~If the bookmark directory contains a 'setenv-source-me.sh' file, it will check to see if it's already been sourced, and source the file if necessary.~~ This has been deprecated for security and simplicity. If users need this functionality, the zsh plugin ['autoenv'](https://github.com/horosgrisa/autoenv) is a good choice.
 
         jump 'foo'
 
