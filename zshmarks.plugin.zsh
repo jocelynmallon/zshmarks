@@ -73,7 +73,6 @@ function jump() {
 	else
 		dir="${bookmark%%|*}"
 		eval "cd \"${dir}\""
-		source_setenv $bookmark_name
 		unset dir
 	fi
 }
@@ -114,7 +113,7 @@ function deletemark()  {
     if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
       eval "printf '%s\n' \"'${bookmark_name}' not found, skipping.\""
     else
-      cp "${BOOKMARKS_FILE}" "${BOOKMARKS_FILE}.bak"
+      \cp "${BOOKMARKS_FILE}" "${BOOKMARKS_FILE}.bak"
       bookmark_line=${bookmark_array[(r)$bookmark_search]}
       bookmark_array=(${bookmark_array[@]/$bookmark_line})
       eval "printf '%s\n' \"\${bookmark_array[@]}\"" >! $BOOKMARKS_FILE
