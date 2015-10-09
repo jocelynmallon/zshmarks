@@ -21,6 +21,20 @@ if [[ ! -f $BOOKMARKS_FILE ]]; then
 	touch $BOOKMARKS_FILE
 fi
 
+_zshmarks_move_to_trash(){
+  if [[ `uname` == Linux* || `uname` == FreeBSD*  ]]; then
+    label=`date +%s`
+    mkdir -p ~/.local/share/Trash/info ~/.local/share/Trash/files
+    \mv "${BOOKMARKS_FILE}.bak" ~/.local/share/Trash/files/bookmarks-$label
+    echo "[Trash Info]
+Path=/home/"$USER"/.bookmarks
+DeletionDate="`date +"%Y-%m-%dT%H:%M:%S"`"
+">~/.local/share/Trash/info/bookmarks-$label.trashinfo
+  else
+    \mv "${BOOKMARKS_FILE}.bak" ~/.Trash/"bookmarks"$(date +%H-%M-%S)
+  fi
+}
+
 function bookmark() {
 	local bookmark_name=$1
 	if [[ -z $bookmark_name ]]; then
@@ -35,7 +49,7 @@ function bookmark() {
     fi
     # Store the bookmark as folder|name
     bookmark="$cur_dir|$bookmark_name"
-    if [[ -z $(grep "$bookmark" $BOOKMARKS_FILE) ]]; then
+    if [[ -z $(grep "$bookmark" $BOOKMARKS_FILE 2>/dev/null) ]]; then
 			echo $bookmark >> $BOOKMARKS_FILE
 			echo "Bookmark '$bookmark_name' saved"
 		else
@@ -117,7 +131,7 @@ function deletemark()  {
       bookmark_line=${bookmark_array[(r)$bookmark_search]}
       bookmark_array=(${bookmark_array[@]/$bookmark_line})
       eval "printf '%s\n' \"\${bookmark_array[@]}\"" >! $BOOKMARKS_FILE
-      mv "${BOOKMARKS_FILE}.bak" ~/.Trash/"bookmarks"$(date +%H-%M-%S)
+      _zshmarks_move_to_trash
     fi
 	fi
 }
