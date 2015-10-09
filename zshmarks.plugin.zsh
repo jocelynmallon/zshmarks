@@ -73,7 +73,6 @@ function jump() {
 	else
 		dir="${bookmark%%|*}"
 		eval "cd \"${dir}\""
-		source_setenv $bookmark_name
 		unset dir
 	fi
 }
