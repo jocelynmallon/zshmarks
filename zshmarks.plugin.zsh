@@ -22,7 +22,7 @@ if [[ ! -f $BOOKMARKS_FILE ]]; then
 fi
 
 _zshmarks_move_to_trash(){
-  if [[ `uname` == Linux* || `uname` == FreeBSD*  ]]; then
+  if [[ $(uname) == "Linux"* || $(uname) == "FreeBSD"*  ]]; then
     label=`date +%s`
     mkdir -p ~/.local/share/Trash/info ~/.local/share/Trash/files
     \mv "${BOOKMARKS_FILE}.bak" ~/.local/share/Trash/files/bookmarks-$label
@@ -30,8 +30,10 @@ _zshmarks_move_to_trash(){
 Path=/home/"$USER"/.bookmarks
 DeletionDate="`date +"%Y-%m-%dT%H:%M:%S"`"
 ">~/.local/share/Trash/info/bookmarks-$label.trashinfo
-  else
+  elif [[ $(uname) = "Darwin" ]]; then
     \mv "${BOOKMARKS_FILE}.bak" ~/.Trash/"bookmarks"$(date +%H-%M-%S)
+  else
+    \rm -f "${BOOKMARKS_FILE}.bak"
   fi
 }
 
