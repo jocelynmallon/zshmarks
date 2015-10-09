@@ -117,7 +117,11 @@ function deletemark()  {
       bookmark_line=${bookmark_array[(r)$bookmark_search]}
       bookmark_array=(${bookmark_array[@]/$bookmark_line})
       eval "printf '%s\n' \"\${bookmark_array[@]}\"" >! $BOOKMARKS_FILE
-      mv "${BOOKMARKS_FILE}.bak" ~/.Trash/"bookmarks"$(date +%H-%M-%S)
+      if [[ $(uname) = "Darwin" ]]; then
+        mv "${BOOKMARKS_FILE}.bak" ~/.Trash/"bookmarks"$(date +%H-%M-%S)
+      else
+        rm "${BOOKMARKS_FILE}.bak"
+      fi
     fi
 	fi
 }
