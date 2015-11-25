@@ -87,9 +87,8 @@ function jump() {
 		echo "  bookmark foo"
 		return 1
 	else
-		dir="${bookmark%%|*}"
+		local dir="${bookmark%%|*}"
 		eval "cd \"${dir}\""
-		unset dir
 	fi
 }
 
