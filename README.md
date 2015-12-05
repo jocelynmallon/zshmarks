@@ -43,6 +43,12 @@ Then make sure you activate the plugin in your .zpreztorc file:
         zshmarks \
         ...
 
+zplug
+-----
+Add the following to your .zshrc file somewhere after you source zplug.
+
+        zplug "jocelynmallon/zshmarks"
+
 Commands/Usage:
 ------
 
