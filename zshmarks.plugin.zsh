@@ -40,25 +40,22 @@ DeletionDate="`date +"%Y-%m-%dT%H:%M:%S"`"
 function bookmark() {
 	local bookmark_name=$1
 	if [[ -z $bookmark_name ]]; then
-		echo 'Invalid name, please provide a name for your bookmark. For example:'
-		echo '  bookmark foo'
-		return 1
-	else
+        bookmark_name="${PWD##*/}"
+    fi
     cur_dir="$(pwd)"
     # Replace /home/uname with $HOME
     if [[ "$cur_dir" =~ ^"$HOME"(/|$) ]]; then
-      cur_dir="\$HOME${cur_dir#$HOME}"
+        cur_dir="\$HOME${cur_dir#$HOME}"
     fi
     # Store the bookmark as folder|name
     bookmark="$cur_dir|$bookmark_name"
     if [[ -z $(grep "$bookmark" $BOOKMARKS_FILE 2>/dev/null) ]]; then
-			echo $bookmark >> $BOOKMARKS_FILE
-			echo "Bookmark '$bookmark_name' saved"
-		else
-			echo "Bookmark already existed"
-			return 1
-		fi
-	fi
+        echo $bookmark >> $BOOKMARKS_FILE
+        echo "Bookmark '$bookmark_name' saved"
+    else
+        echo "Bookmark already existed"
+        return 1
+    fi
 }
 
 __zshmarks_zgrep() {
