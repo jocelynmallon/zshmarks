@@ -113,8 +113,8 @@ function showmarks() {
 		for bookmark_line in $bookmark_array; do
 			bookmark_path="${bookmark_line%%|*}"
 			bookmark_path="${bookmark_path/\$HOME/~}"
-			bookmark_name="${bookmark_line#*|}"
-			printf "%s\t\t%s\n" "$bookmark_name" "$bookmark_path"
+			bookmark_name="${bookmark_line##*|}"
+			printf "%-40s%-25s\n" "$bookmark_name" "$bookmark_path"
 		done
 	fi
 }
@@ -149,6 +149,18 @@ function deletemark()  {
 			_zshmarks_move_to_trash
 		fi
 	fi
-fi
 }
 
+
+_zshmark_completions() {
+	COMPREPLY=()
+    local session="${COMP_WORDS[COMP_CWORD]}"
+    local bookmark_file="$(<"$BOOKMARKS_FILE")"
+	local bookmark_array; bookmark_array=(${(f)bookmark_file});
+	local bookmarks=${bookmark_array[@]##*|}
+
+    # For autocomplete, use both existing sessions as well as directory names.
+    #local sessions=( $(compgen -W "$(tmux list-sessions 2>/dev/null | awk -F: '{ print $1 }')" -- "$session") )
+
+    COMPREPLY=( ${bookmarks[@]} )
+}
