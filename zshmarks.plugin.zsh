@@ -85,11 +85,20 @@ function jump() {
 	else
 	local bookmark
 	if ! __zshmarks_zgrep bookmark "\\|$bookmark_name\$" "$BOOKMARKS_FILE"; then
-		echo "Invalid name, please provide a valid bookmark name. For example:"
-		echo "  jump foo"
-		echo
-		echo "To bookmark a folder, go to the folder then do this (naming the bookmark 'foo'):"
-		echo "  bookmark foo"
+		local code_root_dirs=$(echo $CODE_ROOT_DIRS | sed 's/:/ /g')
+        local matching_dirs=( $(find $code_root_dirs -name "$bookmark_name" -type d -maxdepth 4) )
+        if [ $# -ne 0 ]; then
+            local jumpline=$(find $code_root_dirs -name "*$bookmark_name*" -type d -maxdepth 4 | $(fzfcmd) --bind=ctrl-y:accept --tac)
+        fi
+        if [[ $jumpline ]]; then
+	        eval cd ${jumpline:=\"$PWD\" } && clear
+	    else
+			echo "Invalid name, please provide a valid bookmark name. For example:"
+			echo "  jump foo"
+			echo
+			echo "To bookmark a folder, go to the folder then do this (naming the bookmark 'foo'):"
+			echo "  bookmark foo"
+		fi
 		return 1
 	else
 		local dir="${bookmark%%|*}"
