@@ -1,0 +1,20 @@
+#compdef jump
+#
+# Author: Peter Hatina <phatina@gmail.com>
+
+_jump() {
+    _arguments -C \
+        '1:cmd:->cmds' \
+        '*::arg:->out'
+
+    case "$state" in
+        (cmds)
+            _values 'bookmarks' $(cut -d\| -f2 ~/.bookmarks)
+            ;;
+
+        *)
+            ;;
+    esac
+
+    return 0
+}
