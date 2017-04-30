@@ -137,7 +137,7 @@ function deletemark()  {
 
 	    if [[ -n ${marks_to_delete} ]]; then
 	        while read -r line; do
-	            perl -p -i -e "s#${line}\n##g" $BOOKMARKS_FILE
+	            sed -i "" "\#${line}#d" $BOOKMARKS_FILE
 	        done <<< "$marks_to_delete"
 
 	        echo "** The following marks were deleted **"
