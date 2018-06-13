@@ -86,9 +86,12 @@ function jump() {
 	local bookmark
 	if ! __zshmarks_zgrep bookmark "\\|$bookmark_name\$" "$BOOKMARKS_FILE"; then
 		local code_root_dirs=$(echo $CODE_ROOT_DIRS | sed 's/:/ /g')
-        local matching_dirs=( $(find $code_root_dirs -name "$bookmark_name" -type d -maxdepth 4) )
+		local search_dirs="$code_root_dirs"
+		while IFS='' read -r line || [[ -n "$line" ]]; do
+			search_dirs+=" ${line%%|*}"
+		done < $BOOKMARKS_FILE
         if [ $# -ne 0 ]; then
-            local jumpline=$(find $code_root_dirs -name "*$bookmark_name*" -type d -maxdepth 4 | $(fzfcmd) --bind=ctrl-y:accept --tac)
+            local jumpline=$(eval fd $bookmark_name $search_dirs -t d -d 4 | $(fzfcmd) --bind=ctrl-y:accept --tac)
         fi
         if [[ $jumpline ]]; then
 	        eval cd ${jumpline:=\"$PWD\" } && clear
@@ -102,7 +105,7 @@ function jump() {
 		return 1
 	else
 		local dir="${bookmark%%|*}"
-		eval "cd \"${dir}\""
+		eval "cd \"${dir}\"" && clear
 	fi
 fi
 }
