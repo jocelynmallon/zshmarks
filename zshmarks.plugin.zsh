@@ -91,7 +91,7 @@ function jump() {
 			search_dirs+=" ${line%%|*}"
 		done < $BOOKMARKS_FILE
         if [ $# -ne 0 ]; then
-            local jumpline=$(eval fd $bookmark_name $search_dirs -t d -d 4 | $(fzfcmd) --bind=ctrl-y:accept --tac)
+            local jumpline=$(eval fd $bookmark_name $search_dirs -H -t d -d 4 | $(fzfcmd) --bind=ctrl-y:accept --tac)
         fi
         if [[ $jumpline ]]; then
 	        eval cd ${jumpline:=\"$PWD\" } && clear
