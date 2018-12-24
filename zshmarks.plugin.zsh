@@ -94,7 +94,7 @@ function jump() {
             local jumpline=$(eval fd $bookmark_name $search_dirs -H -t d -d 4 | $(fzfcmd) --bind=ctrl-y:accept --tac)
         fi
         if [[ $jumpline ]]; then
-	        eval cd ${jumpline:=\"$PWD\" } && clear
+	        eval "cd \"${jumpline:=\"$PWD\" }\"" && clear
 	    else
 			echo "Invalid name, please provide a valid bookmark name. For example:"
 			echo "  jump foo"
