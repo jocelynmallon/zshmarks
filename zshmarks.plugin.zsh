@@ -37,16 +37,21 @@ DeletionDate="`date +"%Y-%m-%dT%H:%M:%S"`"
   fi
 }
 
-function bookmark() {
-	local bookmark_name=$1
-	if [[ -z $bookmark_name ]]; then
-        bookmark_name="${PWD##*/}"
-    fi
+__zshmarks_format_pwd(){
     cur_dir="$(pwd)"
     # Replace /home/uname with $HOME
     if [[ "$cur_dir" =~ ^"$HOME"(/|$) ]]; then
         cur_dir="\$HOME${cur_dir#$HOME}"
     fi
+    echo $cur_dir
+}
+
+function bookmark() {
+	local bookmark_name=$1
+	if [[ -z $bookmark_name ]]; then
+        bookmark_name="${PWD##*/}"
+    fi
+    cur_dir=`__zshmarks_format_pwd`
     # Store the bookmark as folder|name
     bookmark="$cur_dir|$bookmark_name"
     if [[ -z $(grep "$bookmark" $BOOKMARKS_FILE 2>/dev/null) ]]; then
@@ -113,24 +118,25 @@ function showmarks() {
 # Delete a bookmark
 function deletemark()  {
   local bookmark_name=$1
+  local bookmark_line bookmark_search
+  local bookmark_file="$(<"$BOOKMARKS_FILE")"
+  local bookmark_array; bookmark_array=(${(f)bookmark_file});
   if [[ -z $bookmark_name ]]; then
-    printf "%s \n" "Please provide a name for your bookmark to delete. For example:"
-    printf "\t%s \n" "deletemark foo"
-    return 1
+    cur_dir=`__zshmarks_format_pwd`
+    bookmark_search="${cur_dir}\|*"
+    if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
+      eval "printf '%s\n' \"'${cur_dir}' not found in you bookmark , skipping.\""
+    fi
   else
-    local bookmark_line bookmark_search
-    local bookmark_file="$(<"$BOOKMARKS_FILE")"
-    local bookmark_array; bookmark_array=(${(f)bookmark_file});
     bookmark_search="*\|${bookmark_name}"
     if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
       eval "printf '%s\n' \"'${bookmark_name}' not found, skipping.\""
-    else
-      \cp "${BOOKMARKS_FILE}" "${BOOKMARKS_FILE}.bak"
-      bookmark_line=${bookmark_array[(r)$bookmark_search]}
-      bookmark_array=(${bookmark_array[@]/$bookmark_line})
-      eval "printf '%s\n' \"\${bookmark_array[@]}\"" >! $BOOKMARKS_FILE
-      _zshmarks_move_to_trash
     fi
-	fi
+  fi
+  \cp "${BOOKMARKS_FILE}" "${BOOKMARKS_FILE}.bak"
+  bookmark_line=${bookmark_array[(r)$bookmark_search]}
+  bookmark_array=(${bookmark_array[@]/$bookmark_line})
+  eval "printf '%s\n' \"\${bookmark_array[@]}\"" >! $BOOKMARKS_FILE
+  _zshmarks_move_to_trash
 }
 
