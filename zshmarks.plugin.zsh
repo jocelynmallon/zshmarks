@@ -32,7 +32,7 @@ __zshmarks_grep() {
   
   for line in "${file_lines[@]}"; do
     if [[ "$line" =~ "$pattern" ]]; then
-      eval "$outvar=\"$line\""
+      # eval "$outvar=\"$line\""
       return 0
     fi
   done
@@ -49,26 +49,24 @@ function bookmark() {
     bookmark_name="${PWD:t}"
   fi
   
-  # Store the bookmark as folder|name
-  bookmark="$(print -nD $PWD)|$bookmark_name"
-  
-  if [[ -z $(grep "$bookmark" $BOOKMARKS_FILE 2>/dev/null) ]]; then
+  if [[ -z $(egrep "^$(print -nD $PWD)\|*" "$BOOKMARKS_FILE" 2>/dev/null) ]]; then
     
-    echo $bookmark >> $BOOKMARKS_FILE
+    # Store the bookmark as folder|name
+    echo "$(print -nD $PWD)|$bookmark_name" >> $BOOKMARKS_FILE
     echo "Bookmark '$bookmark_name' saved"
     
-  else
-    
-    echo "Bookmark already existed"
-    return 1
+    return 0
     
   fi
+  
+  echo "Bookmark already existed"
+  return 1
   
 }
 
 function jump() {
   
-  local bookmark_name=$1
+  local bookmark_name="$1"
   local bookmark
   
   if ! __zshmarks_grep bookmark "\\|$bookmark_name\$" "$BOOKMARKS_FILE"; then
@@ -83,7 +81,7 @@ function jump() {
   else
     
     local dir="${bookmark%%|*}"
-    cd $(eval echo $dir)
+    cd ${dir//\~/$HOME}
     
   fi
   
@@ -112,30 +110,37 @@ function showmarks() {
 # Delete a bookmark
 function deletemark()  {
   
-  local bookmark_name=$1
   local bookmark_line bookmark_search
   local bookmark_file="$(<"$BOOKMARKS_FILE")"
   local bookmark_array; bookmark_array=(${(f)bookmark_file});
   
-  if [[ -z $bookmark_name ]]; then
+  if [[ -z "$1" ]]; then
     
     bookmark_search="${PWD:t}\|*"
     
     if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
-      eval "printf '%s\n' \"'${PWD:t}' not found in you bookmark , skipping.\""
+      echo "'${PWD:t}' not found in you bookmark , skipping."
     fi
+
+    bookmark_line=${bookmark_array[(r)$bookmark_search]}
+    bookmark_array=(${bookmark_array[@]/$bookmark_line})
     
   else
-    
-    bookmark_search="*\|${bookmark_name}"
-    if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
-      eval "printf '%s\n' \"'${bookmark_name}' not found, skipping.\""
-    fi
+    for bookmark_name in $@; do
+      
+      bookmark_search="*\|${bookmark_name}"
+
+      if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
+        echo "'${bookmark_name}' not found, skipping."
+      fi
+
+      bookmark_line=${bookmark_array[(r)$bookmark_search]}
+      bookmark_array=(${bookmark_array[@]/$bookmark_line})
+      
+    done
     
   fi
   
-  bookmark_line=${bookmark_array[(r)$bookmark_search]}
-  bookmark_array=(${bookmark_array[@]/$bookmark_line})
-  eval "printf '%s\n' \"\${bookmark_array[@]}\"" >! $BOOKMARKS_FILE
+  printf '%s\n' "${bookmark_array[@]}" >! $BOOKMARKS_FILE
   
 }
