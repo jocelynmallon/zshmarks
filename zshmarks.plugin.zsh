@@ -21,26 +21,6 @@ if [[ ! -f $BOOKMARKS_FILE ]]; then
   touch $BOOKMARKS_FILE
 fi
 
-
-__zshmarks_grep() {
-  
-  local outvar="$1"; shift
-  local pattern="$1"
-  local filename="$2"
-  local file_contents="$(<"$filename")"
-  local file_lines; file_lines=(${(f)file_contents})
-  
-  for line in "${file_lines[@]}"; do
-    if [[ "$line" =~ "$pattern" ]]; then
-      # eval "$outvar=\"$line\""
-      return 0
-    fi
-  done
-  
-  return 1
-  
-}
-
 function bookmark() {
   
   local bookmark_name=$1
@@ -49,7 +29,7 @@ function bookmark() {
     bookmark_name="${PWD:t}"
   fi
   
-  if [[ -z $(egrep "^$(print -nD $PWD)\|*" "$BOOKMARKS_FILE" 2>/dev/null) ]]; then
+  if ! egrep "^$(print -nD $PWD)\|" "$BOOKMARKS_FILE"; then
     
     # Store the bookmark as folder|name
     echo "$(print -nD $PWD)|$bookmark_name" >> $BOOKMARKS_FILE
@@ -67,9 +47,9 @@ function bookmark() {
 function jump() {
   
   local bookmark_name="$1"
-  local bookmark
+  local bookmark; bookmark=$(egrep -q "\|${bookmark_name}$" "$BOOKMARKS_FILE")
   
-  if ! __zshmarks_grep bookmark "\\|$bookmark_name\$" "$BOOKMARKS_FILE"; then
+  if [[ -z "$bookmark" ]] ; then
     
     echo "Invalid name, please provide a valid bookmark name. For example:"
     echo "  jump foo"
@@ -79,7 +59,7 @@ function jump() {
     return 1
     
   else
-    
+
     local dir="${bookmark%%|*}"
     cd ${dir//\~/$HOME}
     
