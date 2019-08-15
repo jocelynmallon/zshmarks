@@ -6,18 +6,18 @@ local bookmark_array; bookmark_array=(${(f)bookmark_file});
 local bookmark_name bookmark_path bookmark_line
 bookmarks=()
 for bookmark_line in $bookmark_array; do
-	if [[ "$bookmark_line" == *"|"* ]] ; then
-		bookmark_path="${bookmark_line%%|*}"
-		bookmark_path="${bookmark_path/\$HOME/\~}"
-		bookmark_name="${bookmark_line#*|}"
-		bookmarks+="${bookmark_name}:${bookmark_path}"
-	fi
+  if [[ "$bookmark_line" == *"|"* ]] ; then
+    bookmark_path="${bookmark_line%%|*}"
+    bookmark_path="${bookmark_path/\$HOME/\~}"
+    bookmark_name="${bookmark_line#*|}"
+    bookmarks+="${bookmark_name}:${bookmark_path}"
+  fi
 done
 
 _arguments \
-	'*:: :->subcmds' && return 0
+'*:: :->subcmds' && return 0
 
 if (( CURRENT == 1 )); then
-	_describe -t commands 'Bookmarks' bookmarks
-	return
+  _describe -t commands 'Bookmarks' bookmarks
+  return
 fi
