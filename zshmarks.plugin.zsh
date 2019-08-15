@@ -119,7 +119,7 @@ function deletemark()  {
     bookmark_search="${PWD:t}\|*"
     
     if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
-      echo "'${PWD:t}' not found in you bookmark , skipping."
+      echo "'$(print -D $PWD)' not found in you bookmark , skipping."
     fi
 
     bookmark_line=${bookmark_array[(r)$bookmark_search]}
