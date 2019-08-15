@@ -29,7 +29,12 @@ function bookmark() {
     bookmark_name="${PWD:t}"
   fi
   
-  if ! egrep "^$(print -nD $PWD)\|" "$BOOKMARKS_FILE"; then
+  # Is root dir?
+  if [[ -z $bookmark_name ]]; then
+    bookmark_name="/"
+  fi
+  
+  if ! egrep -q "^$(print -nD $PWD)\|" "$BOOKMARKS_FILE"; then
     
     # Store the bookmark as folder|name
     echo "$(print -nD $PWD)|$bookmark_name" >> $BOOKMARKS_FILE
@@ -47,7 +52,7 @@ function bookmark() {
 function jump() {
   
   local bookmark_name="$1"
-  local bookmark; bookmark=$(egrep -q "\|${bookmark_name}$" "$BOOKMARKS_FILE")
+  local bookmark; bookmark=$(egrep "\|${bookmark_name}$" "$BOOKMARKS_FILE" 2>/dev/null)
   
   if [[ -z "$bookmark" ]] ; then
     
@@ -59,7 +64,7 @@ function jump() {
     return 1
     
   else
-
+    
     local dir="${bookmark%%|*}"
     cd ${dir//\~/$HOME}
     
@@ -74,7 +79,7 @@ function showmarks() {
   local bookmark_array; bookmark_array=(${(f)bookmark_file});
   local bookmark_name bookmark_path bookmark_line
   
-  if [[ $# -eq 1 ]]; then
+  if [[ -n "$1" ]]; then
     
     bookmark_name="*\|${1}"
     bookmark_line=${bookmark_array[(r)$bookmark_name]}
@@ -90,37 +95,34 @@ function showmarks() {
 # Delete a bookmark
 function deletemark()  {
   
-  local bookmark_line bookmark_search
+  local bookmark_search
   local bookmark_file="$(<"$BOOKMARKS_FILE")"
-  local bookmark_array; bookmark_array=(${(f)bookmark_file});
   
   if [[ -z "$1" ]]; then
     
-    bookmark_search="${PWD:t}\|*"
+    bookmark_search="$(print -D $PWD)\|*"
     
-    if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
+    if ! egrep -q "$bookmark_search" <<< "$bookmark_file"; then
       echo "'$(print -D $PWD)' not found in you bookmark , skipping."
     fi
 
-    bookmark_line=${bookmark_array[(r)$bookmark_search]}
-    bookmark_array=(${bookmark_array[@]/$bookmark_line})
-    
+    bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
+
   else
     for bookmark_name in $@; do
-      
+
       bookmark_search="*\|${bookmark_name}"
 
-      if [[ -z ${bookmark_array[(r)$bookmark_search]} ]]; then
+      if ! egrep -q "$bookmark_search" <<< "$bookmark_file"; then
         echo "'${bookmark_name}' not found, skipping."
       fi
 
-      bookmark_line=${bookmark_array[(r)$bookmark_search]}
-      bookmark_array=(${bookmark_array[@]/$bookmark_line})
-      
+      bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
+
     done
-    
+
   fi
-  
-  printf '%s\n' "${bookmark_array[@]}" >! $BOOKMARKS_FILE
-  
+
+  printf '%s\n' "${bookmark_file}" >! $BOOKMARKS_FILE
+
 }
