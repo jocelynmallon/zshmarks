@@ -109,6 +109,7 @@ function deletemark()  {
     bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
 
   else
+    
     for bookmark_name in $@; do
 
       bookmark_search="*\|${bookmark_name}"
