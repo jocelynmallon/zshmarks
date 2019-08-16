@@ -8,7 +8,6 @@ bookmarks=()
 for bookmark_line in $bookmark_array; do
   if [[ "$bookmark_line" == *"|"* ]] ; then
     bookmark_path="${bookmark_line%%|*}"
-    bookmark_path="${bookmark_path/\$HOME/\~}"
     bookmark_name="${bookmark_line#*|}"
     bookmarks+="${bookmark_name}:${bookmark_path}"
   fi

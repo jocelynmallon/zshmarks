@@ -81,7 +81,7 @@ function showmarks() {
   
   if [[ -n "$1" ]]; then
     
-    bookmark_name="*\|${1}"
+    bookmark_name="*\|${1}$"
     bookmark_line=${bookmark_array[(r)$bookmark_name]}
     bookmark_path="${bookmark_line%%|*}"
     printf "%s \n" $bookmark_path
@@ -109,7 +109,7 @@ function deletemark()  {
     bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
 
   else
-    
+
     for bookmark_name in $@; do
 
       bookmark_search="*\|${bookmark_name}"
