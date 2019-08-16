@@ -80,14 +80,10 @@ function showmarks() {
   local bookmark_name bookmark_path bookmark_line
   
   if [[ -n "$1" ]]; then
-    
-    bookmark_name="*\|${1}$"
-    bookmark_line=${bookmark_array[(r)$bookmark_name]}
-    bookmark_path="${bookmark_line%%|*}"
-    printf "%s \n" $bookmark_path
-    
+    egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}'
   else
-    printf "$bookmark_file" | awk -F'|' '{print $2"|"$1}' | column -s '|' -o '    ' -t
+    printf "$bookmark_file" | awk -F'|' '{print $2"|"$1}' \
+    | column -s '|' -o '    ' -t
   fi
   
 }
