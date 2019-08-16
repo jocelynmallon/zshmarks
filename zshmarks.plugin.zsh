@@ -1,8 +1,8 @@
 # ------------------------------------------------------------------------------
 #          FILE:  zshmarks.plugin.zsh
-#   DESCRIPTION:  oh-my-zsh plugin file.
+#   DESCRIPTION:  zsh plugin file.
 #        AUTHOR:  Jocelyn Mallon
-#       VERSION:  1.7.0
+#       VERSION:  2.0.0
 # ------------------------------------------------------------------------------
 
 # Set BOOKMARKS_FILE if it doesn't exist to the default.
@@ -14,6 +14,10 @@ fi
 # Check if $BOOKMARKS_FILE is a symlink.
 if [[ -L $BOOKMARKS_FILE ]]; then
   BOOKMARKS_FILE=${BOOKMARKS_FILE:A}
+fi
+
+if grep -q '$HOME' "$BOOKMARKS_FILE"; then
+  sed -i 's/$HOME/~/g' "$BOOKMARKS_FILE"
 fi
 
 # Create bookmarks_file it if it doesn't exist
