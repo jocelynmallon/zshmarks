@@ -87,7 +87,7 @@ function showmarks() {
     printf "%s \n" $bookmark_path
     
   else
-    printf "$bookmark_file" | column -s '|' -o '    ' -t
+    printf "$bookmark_file" | awk -F'|' '{print $2"|"$1}' | column -s '|' -o '    ' -t
   fi
   
 }
