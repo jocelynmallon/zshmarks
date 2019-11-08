@@ -1,4 +1,4 @@
-#compdef jump deletemark showmarks
+#compdef c delmark marks
 #autoload
 
 local bookmark_file="$(<"$BOOKMARKS_FILE")"

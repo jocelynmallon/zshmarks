@@ -4,37 +4,37 @@ A port of [Bashmarks (by Todd Werth)](https://github.com/twerth/bashmarks), a si
 
 ## Commands/Usage:
 
-* jump - used to 'jump' (cd) to the given bookmark directory. ~~If the bookmark directory contains a 'setenv-source-me.sh' file, it will check to see if it's already been sourced, and source the file if necessary.~~ This has been deprecated for security and simplicity. If users need this functionality, the zsh plugin ['zpm-zsh/autoenv'](https://github.com/zpm-zsh/autoenv) is a good choice.
+* `c` - used to `cd` to the given bookmark directory. ~~If the bookmark directory contains a 'setenv-source-me.sh' file, it will check to see if it's already been sourced, and source the file if necessary.~~ This has been deprecated for security and simplicity. If users need this functionality, the zsh plugin ['zpm-zsh/autoenv'](https://github.com/zpm-zsh/autoenv) is a good choice.
 
 ```sh
-jump foo
+c foo
 ```
 
-* bookmark - used to create a new bookmark for your current working directory
+* `mark` - used to create a new bookmark for your current working directory
 
 ```sh
 cd 'some_dir'
-bookmark foo
+mark foo
 # Or
-bookmark # Will be added as `some_dir`
+mark # Will be added as `some_dir`
 ```
 
-* deletemark - used to delete a bookmark
+* `delmark` - used to delete a bookmark
 
 ```sh
-deletemark foo
+delmark foo
 # Or
-deletemark foo bar baz # Remove multiple bookmarks
+delmark foo bar baz # Remove multiple bookmarks
 # Or
-deletemark # Will delete current dir from bookmarks
+delmark # Will delete current dir from bookmarks
 ```
 
-* showmarks - prints a list of all saved bookmarks, or print the directory information for a single, specific bookmark
+* `marks` - prints a list of all saved bookmarks, or print the directory information for a single, specific bookmark
 
 ```sh
-showmarks # Show all marks
+marks # Show all marks
 # Or 
-showmarks foo # Show path to bookmark
+marks foo # Show path to bookmark
 ```
 
 ## Notes/Tips:
@@ -48,11 +48,11 @@ export BOOKMARKS_FILE="foo/bar"
 If you were expecting this to be a port of similarly named [Bashmarks (by huyng)](https://github.com/huyng/bashmarks), you can setup zshmarks to behave in roughly the same way by adding the following aliases to your shell setup files/dotfiles:
 
 ```sh
-alias g="jump"
-alias s="bookmark"
-alias d="deletemark"
-alias p="showmarks"
-alias l="showmarks"
+alias g="c"
+alias s="mark"
+alias d="delmark"
+alias p="marks"
+alias l="marks"
 ```
 
 (You can also omit the "l" alias, and just use p without an argument to show all  bookmarks.)
@@ -65,7 +65,7 @@ alias l="showmarks"
 
 ```sh
 cd ~/.oh-my-zsh/custom/plugins
-git clone https://github.com/jocelynmallon/zshmarks.git
+git clone https://github.com/zpm-zsh/zshmarks.git
 ```
 
 * Activate the plugin in `~/.zshrc`:
@@ -76,9 +76,17 @@ plugins=( [plugins...] zshmarks [plugins...])
 
 * Restart shell
 
+## [zpm](https://github.com/zpm-zsh/zpm)
+
+Add the following to your .zshrc file somewhere after you source zpm.
+
+```sh
+zpm "zpm-zsh/zshmarks"
+```
+
 ## [antigen](https://github.com/zsh-users/antigen)
 
-Add `antigen bundle jocelynmallon/zshmarks` to your .zshrc where you're adding your other plugins. Antigen will clone the plugin for you and add it to your antigen setup the next time you start a new shell.
+Add `antigen bundle zpm-zsh/zshmarks` to your .zshrc where you're adding your other plugins. Antigen will clone the plugin for you and add it to your antigen setup the next time you start a new shell.
 
 ## [prezto](https://github.com/sorin-ionescu/prezto)
 
@@ -93,7 +101,7 @@ Alternatively, you can add the zshmarks repository as a submodule to your prezto
 ```ini
 [submodule "modules/zshmarks"]
         path = modules/zshmarks
-        url = https://github.com/jocelynmallon/zshmarks.git
+        url = https://github.com/zpm-zsh/zshmarks.git
 ```
 
 Then make sure you activate the plugin in your .zpreztorc file:
@@ -109,13 +117,5 @@ zshmarks \
 Add the following to your .zshrc file somewhere after you source zplug.
 
 ```sh
-zplug "jocelynmallon/zshmarks"
-```
-
-## [zpm](https://github.com/zpm-zsh/zpm)
-
-Add the following to your .zshrc file somewhere after you source zpm.
-
-```sh
-zpm "jocelynmallon/zshmarks"
+zplug "zpm-zsh/zshmarks"
 ```
