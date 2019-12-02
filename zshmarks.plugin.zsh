@@ -7,20 +7,13 @@
 
 # Set BOOKMARKS_FILE if it doesn't exist to the default.
 # Allows for a user-configured BOOKMARKS_FILE.
-if [[ -z $BOOKMARKS_FILE ]] ; then
+if [[ -z "$BOOKMARKS_FILE" ]] ; then
   export BOOKMARKS_FILE="$HOME/.bookmarks"
 fi
 
-# Check if $BOOKMARKS_FILE is a symlink.
-if [[ -L $BOOKMARKS_FILE ]]; then
-  BOOKMARKS_FILE=${BOOKMARKS_FILE:A}
-fi
+BOOKMARKS_FILE=${BOOKMARKS_FILE:A}
 
-if grep -q '$HOME' "$BOOKMARKS_FILE"; then
-  sed -i 's/$HOME/~/g' "$BOOKMARKS_FILE"
-fi
-
-# Create bookmarks_file it if it doesn't exist
+# Create bookmarks_file it if it doesn't exist`
 if [[ ! -f $BOOKMARKS_FILE ]]; then
   echo -n > $BOOKMARKS_FILE
 fi
