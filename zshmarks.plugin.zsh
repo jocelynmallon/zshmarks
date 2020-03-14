@@ -1,9 +1,19 @@
+#!/usr/bin/env zsh
 # ------------------------------------------------------------------------------
 #          FILE:  zshmarks.plugin.zsh
 #   DESCRIPTION:  zsh plugin file.
 #        AUTHOR:  Jocelyn Mallon
 #       VERSION:  2.0.0
 # ------------------------------------------------------------------------------
+
+# Standarized $0 handling, following:
+# https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc
+0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
+
+if [[ $PMSPEC != *f* ]] {
+  fpath+=( "${0:h}/functions" )
+}
 
 # Set BOOKMARKS_FILE if it doesn't exist to the default.
 # Allows for a user-configured BOOKMARKS_FILE.
@@ -18,85 +28,4 @@ if [[ ! -f $BOOKMARKS_FILE ]]; then
   echo -n > $BOOKMARKS_FILE
 fi
 
-function mark() {
-  local bookmark_name=$1
-  
-  if [[ -z $bookmark_name ]]; then
-    bookmark_name="${PWD:t}"
-  fi
-  
-  # Is root dir?
-  if [[ -z $bookmark_name ]]; then
-    bookmark_name="/"
-  fi
-  
-  if ! egrep -q "^$(print -nD $PWD)\|" "$BOOKMARKS_FILE"; then
-    # Store the bookmark as folder|name
-    echo "$(print -nD $PWD)|$bookmark_name" >> $BOOKMARKS_FILE
-    echo "Bookmark '$bookmark_name' saved"
-    
-    return 0
-  fi
-  
-  echo "Bookmark already existed"
-  return 1
-}
-
-# Show a list of the bookmarks
-function marks() {
-  local bookmark_file="$(<"$BOOKMARKS_FILE")"
-  local bookmark_array; bookmark_array=(${(f)bookmark_file});
-  local bookmark_name bookmark_path bookmark_line
-  
-  if [[ -n "$1" ]]; then
-    egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}'
-  else
-    printf "$bookmark_file" | awk -F'|' '{print $2"|"$1}' \
-    | column -s '|' -o '    ' -t
-  fi
-}
-
-function c() {
-  local bookmark_name="$1"
-  local bookmark; bookmark=$(egrep "\|${bookmark_name}$" "$BOOKMARKS_FILE" 2>/dev/null)
-  
-  if [[ -z "$bookmark" ]] ; then
-    echo "Invalid name, please provide a valid bookmark name. For example:"
-    echo "  c foo"
-    echo
-    echo "To bookmark a folder, go to the folder then do this (naming the bookmark 'foo'):"
-    echo "  mark foo"
-    return 1
-  else
-    local dir="${bookmark%%|*}"
-    cd ${dir//\~/$HOME}
-  fi
-}
-
-# Delete a bookmark
-function delmark()  {
-  local bookmark_search
-  local bookmark_file="$(<"$BOOKMARKS_FILE")"
-  
-  if [[ -z "$1" ]]; then
-    bookmark_search="$(print -D $PWD)\|*"
-    
-    if ! egrep -q "$bookmark_search" <<< "$bookmark_file"; then
-      echo "'$(print -D $PWD)' not found in you bookmark , skipping."
-    fi
-
-    bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
-  else
-    for bookmark_name in $@; do
-      bookmark_search="*\|${bookmark_name}"
-
-      if ! egrep -q "$bookmark_search" <<< "$bookmark_file"; then
-        echo "'${bookmark_name}' not found, skipping."
-      fi
-
-      bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
-    done
-  fi
-
-  printf '%s\n' "${bookmark_file}" >! $BOOKMARKS_FILE
-}
+autoload -Uz mark marks c delmark

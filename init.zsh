@@ -1,1 +1,0 @@
-zshmarks.plugin.zsh

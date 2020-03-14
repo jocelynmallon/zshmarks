@@ -4,12 +4,12 @@
 local bookmark_file="$(<"$BOOKMARKS_FILE")"
 local bookmark_array; bookmark_array=(${(f)bookmark_file});
 local bookmark_name bookmark_path bookmark_line
-bookmarks=()
+local bookmarks=()
 for bookmark_line in $bookmark_array; do
   if [[ "$bookmark_line" == *"|"* ]] ; then
     bookmark_path="${bookmark_line%%|*}"
     bookmark_name="${bookmark_line#*|}"
-    bookmarks+="${bookmark_name}:${bookmark_path}"
+    bookmarks+=("${bookmark_name}:${bookmark_path}")
   fi
 done
 
