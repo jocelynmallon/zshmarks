@@ -3,7 +3,7 @@
 function c() {
   local bookmark_name="$1"
   local bookmark; bookmark=$(egrep "\|${bookmark_name}$" "$BOOKMARKS_FILE" 2>/dev/null)
-  
+
   if [[ -z "$bookmark" ]] ; then
     echo "Invalid name, please provide a valid bookmark name. For example:"
     echo "  c foo"
@@ -13,6 +13,6 @@ function c() {
     return 1
   else
     local dir="${bookmark%%|*}"
-    cd ${dir//\~/$HOME}
+    builtin cd ${dir//\~/$HOME}
   fi
 }

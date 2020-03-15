@@ -3,13 +3,11 @@
 # Show a list of the bookmarks
 function marks() {
   local bookmark_file="$(<"$BOOKMARKS_FILE")"
-  local bookmark_array; bookmark_array=(${(f)bookmark_file});
-  local bookmark_name bookmark_path bookmark_line
-  
+
   if [[ -n "$1" ]]; then
     egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}'
   else
     printf "$bookmark_file" | awk -F'|' '{print $2"|"$1}' \
-    | column -s '|' -o '    ' -t
+      | column -s '|' -o '    ' -t
   fi
 }

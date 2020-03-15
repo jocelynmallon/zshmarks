@@ -1,13 +1,13 @@
 #!/usr/bin/env zsh
 
 # Delete a bookmark
-function delmark()  {
+function delmark() {
   local bookmark_search
   local bookmark_file="$(<"$BOOKMARKS_FILE")"
-  
+
   if [[ -z "$1" ]]; then
     bookmark_search="$(print -D $PWD)\|*"
-    
+
     if ! egrep -q "$bookmark_search" <<< "$bookmark_file"; then
       echo "'$(print -D $PWD)' not found in you bookmark , skipping."
     fi
@@ -18,7 +18,7 @@ function delmark()  {
       bookmark_search="*\|${bookmark_name}"
 
       if ! egrep -q "$bookmark_search" <<< "$bookmark_file"; then
-        echo "'${bookmark_name}' not found, skipping."
+        echo "'${bookmark_name}' not found in you bookmark , skipping."
       fi
 
       bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
