@@ -17,13 +17,12 @@ if [[ $PMSPEC != *f* ]] {
 
 # Set BOOKMARKS_FILE if it doesn't exist to the default.
 # Allows for a user-configured BOOKMARKS_FILE.
-if [[ -z "$BOOKMARKS_FILE" ]] ; then
-  export BOOKMARKS_FILE="$HOME/.bookmarks"
-fi
+BOOKMARKS_FILE=${BOOKMARKS_FILE:-"$HOME/.bookmarks"}
 
+# Normalize file path
 BOOKMARKS_FILE=${BOOKMARKS_FILE:A}
 
-# Create bookmarks_file it if it doesn't exist`
+# Create file it if it doesn't exist
 if [[ ! -f $BOOKMARKS_FILE ]]; then
   echo -n > $BOOKMARKS_FILE
 fi
