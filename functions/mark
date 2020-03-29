@@ -9,7 +9,7 @@ function mark() {
 
   # Is root dir?
   if [[ -z $bookmark_name ]]; then
-    bookmark_name="/"
+    bookmark_name='/'
   fi
 
   if ! egrep -q "^$(print -nD $PWD)\|" "$BOOKMARKS_FILE"; then
@@ -20,6 +20,6 @@ function mark() {
     return 0
   fi
 
-  echo "Bookmark already existed"
+  echo 'Bookmark already existed'
   return 1
 }
