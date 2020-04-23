@@ -4,7 +4,7 @@ A port of [Bashmarks (by Todd Werth)](https://github.com/twerth/bashmarks), a si
 
 ## Commands/Usage:
 
-* `c` - used to `cd` to the given bookmark directory. ~~If the bookmark directory contains a 'setenv-source-me.sh' file, it will check to see if it's already been sourced, and source the file if necessary.~~ This has been deprecated for security and simplicity. If users need this functionality, the zsh plugin ['zpm-zsh/autoenv'](https://github.com/zpm-zsh/autoenv) is a good choice.
+* `c` - used to `cd` to the given bookmark directory.
 
 ```sh
 c foo
