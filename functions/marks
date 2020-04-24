@@ -1,13 +1,11 @@
 #!/usr/bin/env zsh
 
 # Show a list of the bookmarks
-function marks() {
-  local bookmark_file="$(<"$BOOKMARKS_FILE")"
+local bookmark_file="$(<"$BOOKMARKS_FILE")"
 
-  if [[ -n "$1" ]]; then
-    egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}'
-  else
-    printf "$bookmark_file" | awk -F'|' '{print $2"|"$1}' \
-      | column -s '|' -o '    ' -t
-  fi
-}
+if [[ -n "$1" ]]; then
+  egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}'
+else
+  printf "$bookmark_file" | awk -F'|' '{print $2"|"$1}' \
+    | column -s '|' -o '    ' -t
+fi
