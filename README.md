@@ -81,7 +81,7 @@ plugins=( [plugins...] zshmarks [plugins...])
 Add the following to your .zshrc file somewhere after you source zpm.
 
 ```sh
-zpm "zpm-zsh/zshmarks"
+zpm load "zpm-zsh/zshmarks"
 ```
 
 ## [antigen](https://github.com/zsh-users/antigen)
