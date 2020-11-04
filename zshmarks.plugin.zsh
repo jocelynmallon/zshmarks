@@ -52,7 +52,7 @@ function bookmark() {
 				cur_dir="\$HOME${cur_dir#$HOME}"
 		fi
 		# Store the bookmark as folder|name
-		bookmark="$cur_dir|"
+		bookmark="$cur_dir|$(basename "$PWD")"
 		if [[ -z $(grep "$bookmark" $BOOKMARKS_FILE 2>/dev/null) ]]; then
 				echo $bookmark >> $BOOKMARKS_FILE
 				echo "Bookmark '$bookmark_name' saved"
@@ -66,7 +66,7 @@ __zshmarks_zgrep() {
 	local outvar="$1"; shift
 	local pattern="$1"
 	local filename="$2"
-    mapfile -t file_lines < $filename
+    local file_lines; mapfile -t file_lines < $filename;
 	for line in "${file_lines[@]}"; do
         echo $line
 		if [[ $line =~ $pattern ]]; then
@@ -113,8 +113,7 @@ fi
 
 # Show a list of the bookmarks
 function showmarks() {
-	local bookmark_file="$(<"$BOOKMARKS_FILE")"
-	local bookmark_array; bookmark_array=(${(f)bookmark_file});
+	local bookmark_array; mapfile -t bookmark_array < $BOOKMARKS_FILE;
 	local bookmark_name bookmark_path bookmark_line
 	if [[ $# -eq 1 ]]; then
 		bookmark_name="*\|${1}"
@@ -123,11 +122,11 @@ function showmarks() {
 		bookmark_path="${bookmark_path/\$HOME/~}"
 		printf "%s \n" $bookmark_path
 	else
-		for bookmark_line in $bookmark_array; do
+		for bookmark_line in "${bookmark_array[@]}"; do
 			bookmark_path="${bookmark_line%%|*}"
 			bookmark_path="${bookmark_path/\$HOME/~}"
 			bookmark_name="${bookmark_line##*|}"
-			printf "%-40s%-25s\n" "$bookmark_name" "$bookmark_path"
+			printf "$bookmark_name" "$bookmark_path"
 		done
 	fi
 }
