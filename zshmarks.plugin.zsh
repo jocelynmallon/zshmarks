@@ -22,7 +22,7 @@ if [[ ! -f $BOOKMARKS_FILE ]]; then
 fi
 
 fzfcmd() {
-   [ ${FZF_TMUX:-1} -eq 1 ] && echo "fzf-tmux -d${FZF_TMUX_HEIGHT:-40%}" || echo "fzf"
+   [ ${FZF_TMUX:-1} -eq 1 ] && echo "fzf -d${FZF_TMUX_HEIGHT:-40%}" || echo "fzf"
 }
 
 _zshmarks_move_to_trash(){
@@ -52,7 +52,7 @@ function bookmark() {
 				cur_dir="\$HOME${cur_dir#$HOME}"
 		fi
 		# Store the bookmark as folder|name
-		bookmark="$cur_dir|$bookmark_name"
+		bookmark="$cur_dir|"
 		if [[ -z $(grep "$bookmark" $BOOKMARKS_FILE 2>/dev/null) ]]; then
 				echo $bookmark >> $BOOKMARKS_FILE
 				echo "Bookmark '$bookmark_name' saved"
@@ -66,11 +66,11 @@ __zshmarks_zgrep() {
 	local outvar="$1"; shift
 	local pattern="$1"
 	local filename="$2"
-	local file_contents="$(<"$filename")"
-	local file_lines; file_lines=(${(f)file_contents})
+    mapfile -t file_lines < $filename
 	for line in "${file_lines[@]}"; do
-		if [[ "$line" =~ "$pattern" ]]; then
-			eval "$outvar=\"$line\""
+        echo $line
+		if [[ $line =~ $pattern ]]; then
+			$outvar=\"$line\"
 			return 0
 		fi
 	done
@@ -81,17 +81,17 @@ function jump() {
 	local bookmark_name=$1
 	if [ $# -eq 0 ]; then
     	local jumpline=$(cat ${BOOKMARKS_FILE} | $(fzfcmd) --bind=ctrl-y:accept --tac)
-    	eval cd "${jumpline%%|*}"
+    	eval "cd \"${jumpline%%|*}\"" && clear
 	else
 	local bookmark
 	if ! __zshmarks_zgrep bookmark "\\|$bookmark_name\$" "$BOOKMARKS_FILE"; then
 		local code_root_dirs=$(echo $CODE_ROOT_DIRS | sed 's/:/ /g')
-		local search_dirs="$code_root_dirs"
+		local search_dirs="\"$code_root_dirs\""
 		while IFS='' read -r line || [[ -n "$line" ]]; do
-			search_dirs+=" ${line%%|*}"
+			search_dirs+=" \"${line%%|*}\""
 		done < $BOOKMARKS_FILE
         if [ $# -ne 0 ]; then
-            local jumpline=$(eval fd $bookmark_name $search_dirs -H -t d -d 4 | $(fzfcmd) --bind=ctrl-y:accept --tac)
+            local jumpline=$(eval "fd $bookmark_name $search_dirs -H -t d -d 4 | $(fzfcmd) --bind=ctrl-y:accept --tac")
         fi
         if [[ $jumpline ]]; then
 	        eval "cd \"${jumpline:=\"$PWD\" }\"" && clear
@@ -105,6 +105,7 @@ function jump() {
 		return 1
 	else
 		local dir="${bookmark%%|*}"
+        echo $dir
 		eval "cd \"${dir}\"" && clear
 	fi
 fi
@@ -140,7 +141,8 @@ function deletemark()  {
 
 	    if [[ -n ${marks_to_delete} ]]; then
 	        while read -r line; do
-	            sed -i "" "\#${line}#d" $BOOKMARKS_FILE
+                echo $line
+	            eval "sed -i '' '#${line}#d' $BOOKMARKS_FILE"
 	        done <<< "$marks_to_delete"
 
 	        echo "** The following marks were deleted **"
