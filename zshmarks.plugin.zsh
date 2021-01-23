@@ -4,6 +4,7 @@
 #        AUTHOR:  Jocelyn Mallon
 #       VERSION:  1.7.0
 # ------------------------------------------------------------------------------
+fpath+=( "${${(%):-%x}:P:h}/functions" )
 
 # Set BOOKMARKS_FILE if it doesn't exist to the default.
 # Allows for a user-configured BOOKMARKS_FILE.
