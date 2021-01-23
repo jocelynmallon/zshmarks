@@ -4,6 +4,7 @@
 #        AUTHOR:  Jocelyn Mallon
 #       VERSION:  1.7.0
 # ------------------------------------------------------------------------------
+fpath+=( "${${(%):-%x}:P:h}/functions" )
 
 # Set BOOKMARKS_FILE if it doesn't exist to the default.
 # Allows for a user-configured BOOKMARKS_FILE.
@@ -22,7 +23,7 @@ if [[ ! -f $BOOKMARKS_FILE ]]; then
 fi
 
 _zshmarks_move_to_trash(){
-  if [[ $(uname) == "Linux"* || $(uname) == "FreeBSD"*  ]]; then
+  if [[ $(uname) == "Linux"* || $(uname) == "FreeBSD"* || ZSHMARKS_SKIP_TRASH != "false" ]] ; then
     label=`date +%s`
     mkdir -p ~/.local/share/Trash/info ~/.local/share/Trash/files
     \mv "${BOOKMARKS_FILE}.bak" ~/.local/share/Trash/files/bookmarks-$label
