@@ -1,11 +1,19 @@
 #!/usr/bin/env zsh
 
-# Show a list of the bookmarks
+autoload -Uz @bookmark_colorize
+
 local bookmark_file="$(<"$BOOKMARKS_FILE")"
+local bookmark_path
+local bookmark_name
 
 if [[ -n "$1" ]]; then
-  egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}'
+  @bookmark_colorize "$(egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}')"
+  echo
 else
-  printf "$bookmark_file" | awk -F'|' '{print $2"|"$1}' \
-    | column -s '|' -o '    ' -t
+  printf "$bookmark_file" | while read line; do
+    bookmark_path="${line%|*}"
+    bookmark_name="${line#*|}"
+
+    echo "${bookmark_name}|$(@bookmark_colorize $bookmark_path)"
+  done  | column -s '|' -o '    ' -t
 fi

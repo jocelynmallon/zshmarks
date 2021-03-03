@@ -1,0 +1,9 @@
+autoload -Uz @bookmark_join
+
+local -a colorized
+
+for dir in ${(s./.)1}; do
+  colorized=($colorized "${c[blue]}${c[bold]}${dir}" )
+done
+
+echo -n "$(@bookmark_join "${c[red]}${c[bold]}/" $colorized)${c[reset]}"
