@@ -1,19 +1,19 @@
 #!/usr/bin/env zsh
 
-autoload -Uz @bookmark_colorize
+autoload -Uz @bookmark_path_colorize @bookmark_name_colorize
 
 local bookmark_file="$(<"$BOOKMARKS_FILE")"
 local bookmark_path
 local bookmark_name
 
 if [[ -n "$1" ]]; then
-  @bookmark_colorize "$(egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}')"
+  @bookmark_path_colorize "$(egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}')"
   echo
 else
   printf "$bookmark_file" | while read line; do
     bookmark_path="${line%|*}"
     bookmark_name="${line#*|}"
 
-    echo "${bookmark_name}|$(@bookmark_colorize $bookmark_path)"
-  done  | column -s '|' -o '    ' -t
+    echo "$(@bookmark_name_colorize $bookmark_name)|$(@bookmark_path_colorize $bookmark_path)"
+  done  | column -s '|' -o " ${c[yellow]}${c[bold]}-${c[reset]} " -t 
 fi
