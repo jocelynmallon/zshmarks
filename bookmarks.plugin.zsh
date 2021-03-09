@@ -27,4 +27,4 @@ if [[ ! -f $BOOKMARKS_FILE ]]; then
   echo -n > $BOOKMARKS_FILE
 fi
 
-autoload -Uz mark marks c delmark
+autoload -Uz mark marks c delmark @bookmark_path_colorize @bookmark_name_colorize @bookmark_join

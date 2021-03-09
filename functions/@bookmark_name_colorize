@@ -1,5 +1,3 @@
-autoload -Uz @bookmark_join
-
 local -a colorized
 
 for dir in ${(s./.)1}; do
