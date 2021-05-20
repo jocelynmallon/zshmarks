@@ -1,0 +1,7 @@
+local sep=$1 arg
+printf %s "$2"
+shift 2
+for arg do
+  printf %s%s "$sep" "$arg"
+done
+printf '\n'
