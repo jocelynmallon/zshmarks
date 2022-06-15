@@ -21,6 +21,15 @@ oh-my-zsh
 
         source ~/.zshrc
 
+Fig
+-------
+
+[Fig](https://fig.io) adds apps, shortcuts, and autocomplete to your existing terminal.
+
+Install `zshmarks` in just one click.
+
+<a href="https://fig.io/plugins/other/zshmarks_jocelynmallon" target="_blank"><img src="https://fig.io/badges/install-with-fig.svg" /></a>
+
 antigen
 -------
 Add `antigen bundle jocelynmallon/zshmarks` to your .zshrc where you're adding your other plugins. Antigen will clone the plugin for you and add it to your antigen setup the next time you start a new shell.
