@@ -5,7 +5,7 @@ local bookmark_path
 local bookmark_name
 
 if [[ -n "$1" ]]; then
-  @bookmark_path_colorize "$(egrep "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}')"
+  @bookmark_path_colorize "$(grep -E "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}')"
   echo
 else
   echo "$bookmark_file" | while read line; do

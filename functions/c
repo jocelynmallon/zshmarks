@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 local bookmark_name="$1"
-local bookmark; bookmark=$(egrep "\|${bookmark_name}$" "$BOOKMARKS_FILE" 2>/dev/null)
+local bookmark; bookmark=$(grep -E "\|${bookmark_name}$" "$BOOKMARKS_FILE" 2>/dev/null)
 
 if [[ -z "$bookmark" ]] ; then
   echo 'Invalid name, please provide a valid bookmark name. For example:'

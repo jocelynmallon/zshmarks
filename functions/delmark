@@ -7,20 +7,20 @@ local bookmark_file="$(<"$BOOKMARKS_FILE")"
 if [[ -z "$1" ]]; then
   bookmark_search="$(print -D $PWD)\|*"
 
-  if ! egrep -q "$bookmark_search" <<< "$bookmark_file"; then
+  if ! grep -E -q "$bookmark_search" <<< "$bookmark_file"; then
     echo "'$(print -D $PWD)' not found in you bookmark , skipping."
   fi
 
-  bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
+  bookmark_file="$(grep -E -v "$bookmark_search" <<< $bookmark_file )"
 else
   for bookmark_name in $@; do
-    bookmark_search="*\|${bookmark_name}"
+    bookmark_search="\|${bookmark_name}$"
 
-    if ! egrep -q "$bookmark_search" <<< "$bookmark_file"; then
+    if ! grep -E -q "$bookmark_search" <<< "$bookmark_file"; then
       echo "'${bookmark_name}' not found in you bookmark , skipping."
     fi
 
-    bookmark_file="$(egrep -v "$bookmark_search" <<< $bookmark_file )"
+    bookmark_file="$(grep -E -v "$bookmark_search" <<< $bookmark_file )"
   done
 fi
 

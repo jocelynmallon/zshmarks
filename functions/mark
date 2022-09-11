@@ -11,7 +11,7 @@ if [[ -z $bookmark_name ]]; then
   bookmark_name='/'
 fi
 
-if ! egrep -q "^$(print -nD $PWD)\|" "$BOOKMARKS_FILE"; then
+if ! grep -E -q "^$(print -nD $PWD)\|" "$BOOKMARKS_FILE"; then
   # Store the bookmark as folder|name
   echo "$(print -nD $PWD)|$bookmark_name" >> $BOOKMARKS_FILE
   echo "Bookmark '$bookmark_name' saved"
