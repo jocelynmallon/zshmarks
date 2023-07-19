@@ -65,7 +65,7 @@ alias l="marks"
 
 ```sh
 cd ~/.oh-my-zsh/custom/plugins
-git clone https://github.com/zpm-zsh/zshmarks.git
+git clone https://github.com/zpm-zsh/zshmarks.git bookmarks
 ```
 
 * Activate the plugin in `~/.zshrc`:
