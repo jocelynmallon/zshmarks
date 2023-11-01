@@ -12,6 +12,9 @@ else
     bookmark_path="${line%|*}"
     bookmark_name="${line#*|}"
 
-    echo "$(@bookmark_name_colorize $bookmark_name)|$(@bookmark_path_colorize $bookmark_path)"
-  done | column -s '|' -o "  ${c[yellow]}${c[bold]}--${c[reset]} " -t 
+    if [[ -n "$bookmark_path" && -n "$bookmark_name" ]]; then
+      echo "$(@bookmark_name_colorize $bookmark_name)|$(@bookmark_path_colorize $bookmark_path)"
+    fi
+
+  done | column -s '|' -o "  ${c[yellow]}${c[bold]}--${c[reset]} " -t
 fi

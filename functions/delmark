@@ -5,7 +5,7 @@ local bookmark_search
 local bookmark_file="$(<"$BOOKMARKS_FILE")"
 
 if [[ -z "$1" ]]; then
-  bookmark_search="$(print -D $PWD)\|*"
+  bookmark_search="$(print -D $PWD)\|"
 
   if ! grep -E -q "$bookmark_search" <<< "$bookmark_file"; then
     echo "'$(print -D $PWD)' not found in you bookmark , skipping."
