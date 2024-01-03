@@ -71,7 +71,7 @@ git clone https://github.com/zpm-zsh/zshmarks.git bookmarks
 * Activate the plugin in `~/.zshrc`:
 
 ```sh
-plugins=( [plugins...] zshmarks [plugins...])
+plugins=( [plugins...] bookmarks [plugins...])
 ```
 
 * Restart shell
