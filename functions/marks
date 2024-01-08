@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+
+local bookmark_file="$(<"$BOOKMARKS_FILE")"
+local bookmark_path
+local bookmark_name
+
+if [[ -n "$1" ]]; then
+  @bookmark_path_colorize "$(grep -E "\|${1}$" <<< "$bookmark_file" | awk -F'|' '{print $1}')"
+  echo
+else
+  echo "$bookmark_file" | while read line; do
+    bookmark_path="${line%|*}"
+    bookmark_name="${line#*|}"
+
+    if [[ -n "$bookmark_path" && -n "$bookmark_name" ]]; then
+      echo "$(@bookmark_name_colorize $bookmark_name)|$(@bookmark_path_colorize $bookmark_path)"
+    fi
+
+  done | column -s '|' -o "  ${c[yellow]}${c[bold]}--${c[reset]} " -t
+fi

@@ -1,0 +1,23 @@
+#compdef c delmark marks
+#autoload
+
+declare -a bookmark_array; bookmark_array=( ${(f)"$(<$BOOKMARKS_FILE)"} )
+declare -a bookmarks; bookmarks=()
+
+local bookmark_name bookmark_path bookmark_line
+
+for bookmark_line in $bookmark_array; do
+  if [[ "$bookmark_line" == *"|"* ]] ; then
+    bookmark_path="${bookmark_line%%|*}"
+    bookmark_name="${bookmark_line#*|}"
+    bookmarks+=("${bookmark_name}:${bookmark_path}")
+  fi
+done
+
+_arguments \
+  '*:: :->subcmds' && return 0
+
+if (( CURRENT == 1 )); then
+  _describe -t commands 'Bookmarks' bookmarks
+  return
+fi

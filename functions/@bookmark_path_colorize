@@ -1,0 +1,16 @@
+local -a colorized
+
+
+if [[ -z $1 ]]; then
+  return 0
+fi
+
+for dir in ${(s./.)1}; do
+  colorized=($colorized "${c[blue]}${c[bold]}${dir}" )
+done
+
+if [[ $1 == "/"* ]]; then
+  echo -n "${c[red]}${c[bold]}/"
+fi
+
+echo -n "$(@bookmark_join "${c[red]}${c[bold]}/" $colorized)${c[reset]}"

@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+
+# Delete a bookmark
+local bookmark_search
+local bookmark_file="$(<"$BOOKMARKS_FILE")"
+
+if [[ -z "$1" ]]; then
+  bookmark_search="$(print -D $PWD)\|"
+
+  if ! grep -E -q "$bookmark_search" <<< "$bookmark_file"; then
+    echo "'$(print -D $PWD)' not found in you bookmark , skipping."
+  fi
+
+  bookmark_file="$(grep -E -v "$bookmark_search" <<< $bookmark_file )"
+else
+  for bookmark_name in $@; do
+    bookmark_search="\|${bookmark_name}$"
+
+    if ! grep -E -q "$bookmark_search" <<< "$bookmark_file"; then
+      echo "'${bookmark_name}' not found in you bookmark , skipping."
+    fi
+
+    bookmark_file="$(grep -E -v "$bookmark_search" <<< $bookmark_file )"
+  done
+fi
+
+printf '%s\n' "${bookmark_file}" >! $BOOKMARKS_FILE
