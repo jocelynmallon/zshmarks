@@ -89,6 +89,20 @@ function jump() {
     fi
 }
 
+# Completion function for jump
+function _jump() {
+	local state
+
+	_arguments \
+		'1: :->name'
+
+	case $state in
+		name)
+			_arguments '1:names:($(sed -E "s/^[^|]+\|//" $HOME/.bookmarks))'
+		;;
+	esac
+}
+
 # Show a list of the bookmarks
 function showmarks() {
     local bookmark_file="$(<"$BOOKMARKS_FILE")"
