@@ -86,3 +86,7 @@ If you were expecting this to be a port of similarly named [Bashmarks (by huyng)
         alias l="showmarks"
 
 (You can also omit the "l" alias, and just use p without an argument to show all  bookmarks.)
+
+If you would like `jump` to autocomplete bookmark names, you can add this to your `.zshrc` somewhere after `compinit`:
+
+        compdef _jump jump
